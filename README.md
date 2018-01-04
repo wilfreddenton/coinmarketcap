@@ -1,1 +1,1 @@
-# coin-market-cap
+# coinmarketcap

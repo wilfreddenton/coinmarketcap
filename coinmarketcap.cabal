@@ -1,13 +1,13 @@
-name:                coin-market-cap
+name:                coinmarketcap
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/coin-market-cap#readme
+homepage:            https://github.com/wilfreddenton/coinmarketcap#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2018 Author name here
+author:              Wilfred Denton
+maintainer:          dentonw3@gmail.com
+copyright:           2018 Wilfred Denton
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
@@ -30,4 +30,4 @@ library
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/coin-market-cap
+  location: https://github.com/wilfreddenton/coinmarketcap
