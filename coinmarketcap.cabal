@@ -18,10 +18,13 @@ library
   exposed-modules:     API,
                        Client,
                        Types,
+                       Core,
                        Run
   build-depends:       base >= 4.7 && < 5,
+                       bytestring >= 0.10,
                        aeson,
                        text,
+                       http-api-data,
                        http-client,
                        http-client-tls,
                        servant,

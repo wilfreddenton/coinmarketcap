@@ -1,5 +1,6 @@
 module Client (
-  getTicker
+  getTicker,
+  getTickers
   ) where
 
 import           Data.Proxy
@@ -12,7 +13,7 @@ import           Types
 coinMarketCapAPI :: Proxy CoinMarketCapAPI
 coinMarketCapAPI = Proxy
 
-getTicker :: String -> ClientM Tickers
-getTickers :: ClientM Tickers
+getTicker :: TickerId -> Maybe FiatSymbol -> ClientM Tickers
+getTickers :: Maybe Integer -> Maybe Integer -> Maybe FiatSymbol -> ClientM Tickers
 
 getTicker :<|> getTickers = client coinMarketCapAPI

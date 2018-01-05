@@ -1,24 +1,20 @@
 module Run where
 
+import           Data.Aeson
+import qualified Data.ByteString.Lazy    as B
 import           Network.HTTP.Client     (newManager)
 import           Network.HTTP.Client.TLS (tlsManagerSettings)
 import           Servant.Client
 
 import           Client
+import           Core
 import           Types
-
-ticker :: ClientM Ticker
-ticker = do
-  tickers <- getTicker "cardano"
-  return $ head tickers
 
 run :: IO ()
 run = do
-  manager <- newManager tlsManagerSettings
-
-  res <- runClientM ticker (ClientEnv manager (BaseUrl Https "api.coinmarketcap.com" 443 "/v1"))
+  res <- ticker "cardano" (Just JPY)
   case res of
     Left err -> putStrLn $ "Error: " ++ show err
     Right t -> do
-      print t
+      B.writeFile "out.json" $ encode t
 

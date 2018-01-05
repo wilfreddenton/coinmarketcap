@@ -10,5 +10,10 @@ import           Servant.API
 import           Types
 
 type CoinMarketCapAPI =
-       "ticker" :> Capture "id" String :> Get '[JSON] Tickers
-  :<|> "ticker" :> Get '[JSON] Tickers
+       "ticker" :> Capture "id" String
+                :> QueryParam "convert" FiatSymbol
+                :> Get '[JSON] Tickers
+  :<|> "ticker" :> QueryParam "start" Integer
+                :> QueryParam "limit" Integer
+                :> QueryParam "convert" FiatSymbol
+                :> Get '[JSON] Tickers
