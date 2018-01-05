@@ -12,7 +12,7 @@ import           Types
 
 run :: IO ()
 run = do
-  res <- ticker "cardano" (Just JPY)
+  res <- ticker "cardano" $ Just JPY
   case res of
     Left err -> putStrLn $ "Error: " ++ show err
     Right t -> do

@@ -17,3 +17,5 @@ type CoinMarketCapAPI =
                 :> QueryParam "limit" Integer
                 :> QueryParam "convert" FiatSymbol
                 :> Get '[JSON] Tickers
+  :<|> "global" :> QueryParam "convert" FiatSymbol
+                :> Get '[JSON] GlobalData

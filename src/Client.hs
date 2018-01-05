@@ -15,5 +15,6 @@ coinMarketCapAPI = Proxy
 
 getTicker :: TickerId -> Maybe FiatSymbol -> ClientM Tickers
 getTickers :: Maybe Integer -> Maybe Integer -> Maybe FiatSymbol -> ClientM Tickers
+getGlobalData :: Maybe FiatSymbol -> ClientM GlobalData
 
-getTicker :<|> getTickers = client coinMarketCapAPI
+getTicker :<|> getTickers :<|> getGlobalData = client coinMarketCapAPI
