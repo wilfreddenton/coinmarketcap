@@ -1,6 +1,7 @@
 module Client (
   getTicker,
-  getTickers
+  getTickers,
+  getGlobalData
   ) where
 
 import           Data.Proxy

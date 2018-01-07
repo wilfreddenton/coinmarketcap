@@ -30,3 +30,7 @@ ticker tickerId symbol = do
   clientEnv' <- clientEnv
   runClientM (getTicker' tickerId symbol) clientEnv'
 
+globalData :: Maybe FiatSymbol -> IO (Either ServantError GlobalData)
+globalData symbol = do
+  clientEnv' <- clientEnv
+  runClientM (getGlobalData symbol) clientEnv'
