@@ -1,17 +1,21 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
-module Types (
-  TickerId,
-  Ticker,
-  Tickers,
-  GlobalData,
-  FiatSymbol (..)
+module Types
+  ( TickerId
+  , Ticker
+  , Tickers
+  , GlobalData
+  , FiatSymbol (..)
   ) where
 
 import           Data.Aeson
+import           Data.Aeson.TH
 import           Data.Maybe
-import           Data.Text                hiding (filter, map)
+import           Data.Text                hiding (drop, filter, map, toLower)
 import           Web.Internal.HttpApiData
+
+import           Utils
 
 type TickerId = String
 
@@ -35,52 +39,10 @@ data Ticker = Ticker
   , tLastUpdated      :: String
   } deriving (Eq, Show)
 
-instance FromJSON Ticker where
-  parseJSON (Object o) =
-    Ticker <$> o .: "id"
-           <*> o .: "name"
-           <*> o .: "symbol"
-           <*> o .: "rank"
-           <*> o .: "price_btc"
-           <*> o .: "price_usd"
-           <*> o .:? "price_jpy"
-           <*> o .: "24h_volume_usd"
-           <*> o .: "market_cap_usd"
-           <*> o .:? "market_cap_jpy"
-           <*> o .: "available_supply"
-           <*> o .: "total_supply"
-           <*> o .: "max_supply"
-           <*> o .: "percent_change_1h"
-           <*> o .: "percent_change_24h"
-           <*> o .: "percent_change_7d"
-           <*> o .: "last_updated"
-
-instance ToJSON Ticker where
-  toJSON (Ticker tickerId name symbol rank priceBtc priceUsd
-          priceJpy twoFourHVolumeUsd marketCapUsd marketCapJpy
-          availableSupply totalSupply maxSupply percentChange1h
-          percentChange24h percentChange7d lastUpdated
-         ) =
-    let base_object = [ "id" .= tickerId
-                      , "name" .= name
-                      , "symbol" .= symbol
-                      , "rank" .= rank
-                      , "price_btc" .= priceBtc
-                      , "price_usd" .= priceUsd
-                      , "24h_volume_usd" .= twoFourHVolumeUsd
-                      , "market_cap_usd" .= marketCapUsd
-                      , "available_supply" .= availableSupply
-                      , "total_supply" .= totalSupply
-                      , "max_supply" .= maxSupply
-                      , "percent_change_1h" .= percentChange1h
-                      , "percent_change_24h" .= percentChange24h
-                      , "percent_change_7d" .= percentChange7d
-                      , "last_updated" .= lastUpdated
-                      ]
-        optional_pairs = [("price_jpy", priceJpy), ("market_cap_jpy", marketCapJpy)]
-        filterNothing = filter $ \(_, v) -> not $ isNothing v
-        tuplesToPairs = map $ \(k, v) -> k .= v
-     in object $ base_object ++ (tuplesToPairs . filterNothing) optional_pairs
+$(deriveJSON defaultOptions
+   { fieldLabelModifier = tickerLabelModifier
+   , omitNothingFields = True
+   } ''Ticker)
 
 type Tickers = [Ticker]
 
@@ -96,31 +58,10 @@ data GlobalData = GlobalData
   , gTotal24hVolumeJpy            :: Maybe Integer
   }
 
-instance FromJSON GlobalData where
-  parseJSON (Object o) =
-    GlobalData <$> o .: "total_market_cap_usd"
-               <*> o .: "total_24h_volume_usd"
-               <*> o .: "bitcoin_percentage_of_market_cap"
-               <*> o .: "active_currencies"
-               <*> o .: "active_assets"
-               <*> o .: "active_markets"
-               <*> o .: "last_updated"
-               <*> o .:? "total_market_cap_jpy"
-               <*> o .:? "total_24h_volume_jpy"
-
-instance ToJSON GlobalData where
-  toJSON (GlobalData totalMarketCapUsd total24hVolumeUsd bitcoinPercentageOfMarketCap
-          activeCurrencies activeAssets activeMarkets lastUpdated totalMarketCapJpy total24hVolumeJpy
-         ) = object [ "total_market_cap_usd" .= totalMarketCapUsd
-                    , "total_24h_volume_usd" .= total24hVolumeUsd
-                    , "bitcoin_percentage_of_market_cap" .= bitcoinPercentageOfMarketCap
-                    , "active_currencies" .= activeCurrencies
-                    , "active_assets" .= activeAssets
-                    , "active_markets" .= activeMarkets
-                    , "last_updated" .= lastUpdated
-                    , "total_market_cap_jpy" .= totalMarketCapJpy
-                    , "total_24h_volume_jpy" .= total24hVolumeJpy
-                    ]
+$(deriveJSON defaultOptions
+   { fieldLabelModifier = globalDataLabelModifier
+   , omitNothingFields = True
+   } ''GlobalData)
 
 data FiatSymbol = AUD | BRL | CAD | CHF | CLP | CNY
                 | CZK | DKK | EUR | GBP | HKD | HUF

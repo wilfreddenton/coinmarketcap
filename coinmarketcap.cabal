@@ -19,9 +19,12 @@ library
                        Client,
                        Types,
                        Core,
+                       Utils,
                        Run
   build-depends:       base >= 4.7 && < 5,
+                       MissingH,
                        bytestring >= 0.10,
+                       casing,
                        aeson,
                        text,
                        http-api-data,

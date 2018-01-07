@@ -12,7 +12,8 @@ import           Types
 
 run :: IO ()
 run = do
-  res <- globalData Nothing
+  -- res <- ticker "cardano" $ Nothing
+  res <- globalData $ Just JPY
   case res of
     Left err -> putStrLn $ "Error: " ++ show err
     Right t -> do
